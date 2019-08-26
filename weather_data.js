@@ -12,8 +12,13 @@ request(weatherUrl,{json:true},(err,body)=>{
             res.write(JSON.stringify(response));
             let data = JSON.stringify(response);
             console.log(data)
-            fs.writeFileSync('wetherData.json', data);
-            fs.readFile('./wetherData.json', 'utf8', function(err, contents) {
+
+            fs.exists(`${cityName}WetherData.json`, function(exists){
+              if(exists){
+                console.log("yes file exists");
+              }else{
+            fs.writeFileSync(`${cityName}WetherData.json`, data);
+            fs.readFile(`./${cityName}WetherData.json`, 'utf8', function(err, contents) {
                 if (err) {
                   console.log(err)
                 } else {
@@ -35,12 +40,14 @@ request(weatherUrl,{json:true},(err,body)=>{
                       cod:cod,
                       lon: lon,
                       lat: lat
-              };   
+                    };   
                     let dataWether = JSON.stringify(wether);
-                    console.log(dataWether)
-                    fs.writeFileSync('wetherParticularData.json', dataWether);
+                    // console.log(dataWether)
+                    fs.writeFileSync(`${cityName}ParticularData.json`, dataWether);
                 }
-              });          
+              });
+              }
+            });         
             res.end();
         }
     }).listen(3000);
